@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 
+from sklearn.preprocessing import LabelEncoder
+
 class Munger():
 	def __init__(self, train_df, validation_df, test_df):
 		if train_df is None:
@@ -27,12 +29,8 @@ class Munger():
 		self.X_validation = self.validation[features].astype(np.float)
 		self.y_validation = self.validation.target
 
-		# whole dataset
-		self.X_full = pd.concat([self.X, self.X_validation])
-		self.y_full = pd.concat([self.y, self.y_validation])
-
 		# test examples
-		self.test = test_df[test_df.columns[1:-1]].astype(np.float)
+		self.X_test = test_df[test_df.columns[1:-1]].astype(np.float)
 
 	def remove_correlated_features(self, correlated_features=[]):
 		if len(correlated_features) == 0:
@@ -44,6 +42,34 @@ class Munger():
 
 		self.X = self.train[features_to_consider]
 		self.X_validation = self.validation[features_to_consider]
-		self.X_full = self.X_full[features_to_consider]
-		self.test = self.test[features_to_consider]
+		self.X_test = self.X_test[features_to_consider]
+
+	def concatenate_train_validation(self):
+		# whole dataset
+		self.X_full = pd.concat([self.X, self.X_validation])
+		self.y_full = pd.concat([self.y, self.y_validation])
+
+
+	def label_encoding(self, label='c1'):
+		lbl = LabelEncoder()
+
+		lbl.fit(pd.concat([self.train[label], 
+			                     self.validation[label],
+			                     self.test[label]]))
+		
+		self.X[label] = lbl.transform(self.train[label])
+		self.X_validation[label] = lbl.transform(self.validation[label])
+		self.X_test[label] = lbl.transform(self.test[label])
+
+
+	def one_hot_encoding(self, label='c1'):
+
+		ohe_df_X = pd.get_dummies(self.train[label])
+		ohe_df_X_val = pd.get_dummies(self.validation[label])
+		ohe_df_X_test = pd.get_dummies(self.test[label])
+
+
+		self.X = pd.concat([self.X, ohe_df_X], axis=1)
+		self.X_validation = pd.concat([self.X_validation, ohe_df_X_val], axis=1)
+		self.X_test = pd.concat([self.X_test, ohe_df_X_test], axis=1)
 

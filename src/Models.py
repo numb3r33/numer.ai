@@ -4,6 +4,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler
 from sklearn.dummy import DummyClassifier
 
+from xgboost import XGBClassifier
+
 class Models():
 	def __init__(self):
 		pass
@@ -15,7 +17,7 @@ class Models():
 		Scored 0.5390 with reduced features
 		"""
 		scaler = StandardScaler()
-
+		
 		params = {'C': 0.1}
 		clf = LogisticRegression(**params)
 
@@ -42,6 +44,17 @@ class Models():
 		          'min_samples_split': 5}
 
 		clf = RandomForestClassifier(**params)
+		pipeline = Pipeline([('scaler', scaler), ('clf', clf)])
+
+		return pipeline
+
+
+	def extreme_gbm(self):
+
+		scaler = StandardScaler()
+		params = {'n_estimators': 100, 'learning_rate': 0.1}
+
+		clf = XGBClassifier(**params)
 		pipeline = Pipeline([('scaler', scaler), ('clf', clf)])
 
 		return pipeline
