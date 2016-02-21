@@ -31,7 +31,7 @@ class FeatureTransformer(BaseEstimator):
 		features = np.hstack(features)
 
 		features = features.astype(np.float)
-		print 'shape of the features ', features.shape
+		
 		return features
 
 
@@ -43,6 +43,33 @@ class FeatureTransformer(BaseEstimator):
 			addition_interactions.append(df[f1] + df[f2])
 
 		return np.array(addition_interactions).T
+
+	def get_subtraction_interaction_features(self, df):
+		numerical_features = self.numerical_features[:-1]
+		subtraction_interactions = []
+
+		for f1, f2 in combinations(numerical_features, 2):
+			subtraction_interactions.append(df[f1] - df[f2])
+
+		return np.array(subtraction_interactions).T
+
+	def get_multiply_interaction_features(self, df):
+		numerical_features = self.numerical_features[:-1]
+		multiply_interactions = []
+
+		for f1, f2 in combinations(numerical_features, 2):
+			multiply_interactions.append(df[f1] * df[f2])
+
+		return np.array(multiply_interactions).T
+
+	def get_division_interaction_features(self, df):
+		numerical_features = self.numerical_features[:-1]
+		division_interactions = []
+
+		for f1, f2 in combinations(numerical_features, 2):
+			division_interactions.append(df[f1] / df[f2])
+
+		return np.array(division_interactions).T
 
 	def transform(self, X):
 
