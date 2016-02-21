@@ -4,6 +4,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from sklearn.dummy import DummyClassifier
 
+from features import FeatureTransformer
+
 from xgboost import XGBClassifier
 
 class Models():
@@ -16,14 +18,19 @@ class Models():
 		Scored 0.5371 on the leaderboard
 		Scored 0.5390 with reduced features
 		Scored 0.5290 with one hot encoded features
+		Scored 0.5386 with label encoded features
+		after calibration
+		Scored 0.5271 with polynomial features
+		after calibration
 		"""
+
+		ft = FeatureTransformer()
 		scaler = StandardScaler()
-		# scaler = MinMaxScaler()
 		
 		params = {'C': 0.1}
 		clf = LogisticRegression(**params)
 
-		pipeline = Pipeline([('scaler', scaler), ('clf', clf)])
+		pipeline = Pipeline([('ft', ft), ('scaler', scaler), ('clf', clf)])
 
 		return pipeline
 

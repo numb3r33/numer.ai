@@ -33,10 +33,10 @@ def eval_models(models, X, y):
 			X_test, y_test = X.iloc[test], y.iloc[test]
 			clf.fit(X_train, y_train)
 
-			sig_clf = CalibratedClassifierCV(clf, method='isotonic', cv='prefit')		
-			sig_clf.fit(X_test, y_test)
+			# sig_clf = CalibratedClassifierCV(clf, method='isotonic', cv='prefit')		
+			# sig_clf.fit(X_test, y_test)
 			
-			auc = sig_clf.predict_proba(X_test)[:, 1]
+			auc = clf.predict_proba(X_test)[:, 1]
 			
 			print("score: %f" % roc_auc_score(y_test, auc))
 			scores_combined += auc
