@@ -1,7 +1,7 @@
 from sklearn.pipeline import Pipeline
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from sklearn.dummy import DummyClassifier
 
 from xgboost import XGBClassifier
@@ -18,6 +18,7 @@ class Models():
 		Scored 0.5290 with one hot encoded features
 		"""
 		scaler = StandardScaler()
+		# scaler = MinMaxScaler()
 		
 		params = {'C': 0.1}
 		clf = LogisticRegression(**params)
@@ -38,11 +39,19 @@ class Models():
 	def random_forest_classifier(self):
 		"""
 		Scored 0.5271 on the leaderboard
+		
+		Scored 0.5214 on the leaderboard with
+		one hot encoded features and parameter
+		settings as follows:
+			
+		params = {'n_estimators': 100, 'max_depth': 3, 
+		          'n_jobs': -1}
+
 		"""
 
 		scaler = StandardScaler()
-		params = {'n_estimators': 300, 'max_depth': 5, 'n_jobs': -1,
-		          'min_samples_split': 5}
+		params = {'n_estimators': 100, 'max_depth': 3, 
+		          'n_jobs': -1}
 
 		clf = RandomForestClassifier(**params)
 		pipeline = Pipeline([('scaler', scaler), ('clf', clf)])
