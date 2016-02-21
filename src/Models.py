@@ -15,6 +15,7 @@ class Models():
 		"""
 		Scored 0.5371 on the leaderboard
 		Scored 0.5390 with reduced features
+		Scored 0.5290 with one hot encoded features
 		"""
 		scaler = StandardScaler()
 		

@@ -57,9 +57,9 @@ class Munger():
 			                     self.validation[label],
 			                     self.test[label]]))
 		
-		self.X[label] = lbl.transform(self.train[label])
-		self.X_validation[label] = lbl.transform(self.validation[label])
-		self.X_test[label] = lbl.transform(self.test[label])
+		self.X.loc[:,label] = lbl.transform(self.train[label])
+		self.X_validation.loc[:,label] = lbl.transform(self.validation[label])
+		self.X_test.loc[:,label] = lbl.transform(self.test[label])
 
 
 	def one_hot_encoding(self, label='c1'):
