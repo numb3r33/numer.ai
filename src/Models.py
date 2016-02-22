@@ -29,20 +29,25 @@ class Models():
 		Scored 0.5271 with polynomial features
 		after calibration
 
-		Scored .5376 with all interaction features and
+		Scored 0.5376 with all interaction features and
 		then feature selection
+
+		Scored 0.5392 with KMeans Clustering
+
+		Scored 0.5403 with KMeans and other interaction
+		features
 		"""
 
 		ft = FeatureTransformer()
 		scaler = StandardScaler()
-		# select = SelectKBest(chi2, k=15)
+		select = SelectKBest(chi2, k=7)
 		
 		params = {'C': 0.1, 'penalty': 'l1',
 		          'class_weight': 'auto'}
 
 		clf = LogisticRegression(**params)
 
-		pipeline = Pipeline([('ft', ft),
+		pipeline = Pipeline([('ft', ft), ('select', select),
 			                 ('scaler', scaler),('clf', clf)])
 
 		return pipeline
