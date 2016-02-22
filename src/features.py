@@ -1,7 +1,11 @@
 from sklearn.base import BaseEstimator
+from sklearn.cluster import KMeans
+
 from itertools import combinations
 import pandas as pd
 import numpy as np
+
+
 
 class FeatureTransformer(BaseEstimator):
 	def __init__(self): 
@@ -21,19 +25,22 @@ class FeatureTransformer(BaseEstimator):
 
 
 	def fit_transform(self, X, y=None):
+		self.kmeans = KMeans(n_clusters=2, n_jobs=-1, n_init=5)
 		self.numerical_features = X.select_dtypes(exclude=['object']).columns
 		
-		addition_interaction_features = self.get_addition_interaction_features(X)
+		# addition_interaction_features = self.get_addition_interaction_features(X)
+		self.kmeans.fit(X)
+		cluster_labels = self.kmeans.predict(X).reshape(-1, 1)
 
 		features = []
 		features.append(X[self.numerical_features])
-		features.append(addition_interaction_features)
+		features.append(cluster_labels)
+		# features.append(addition_interaction_features)
 		features = np.hstack(features)
 
 		features = features.astype(np.float)
 		
 		return features
-
 
 	def get_addition_interaction_features(self, df):
 		numerical_features = self.numerical_features[:-1]
@@ -72,12 +79,13 @@ class FeatureTransformer(BaseEstimator):
 		return np.array(division_interactions).T
 
 	def transform(self, X):
-
-		addition_interaction_features = self.get_addition_interaction_features(X)
+		cluster_labels = self.kmeans.predict(X).reshape(-1, 1)
+		# addition_interaction_features = self.get_addition_interaction_features(X)
 
 		features = []
 		features.append(X[self.numerical_features])
-		features.append(addition_interaction_features)
+		# features.append(addition_interaction_features)
+		features.append(cluster_labels)
 		features = np.hstack(features)
 
 		features = features.astype(np.float)

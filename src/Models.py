@@ -35,14 +35,14 @@ class Models():
 
 		ft = FeatureTransformer()
 		scaler = StandardScaler()
-		select = SelectKBest(chi2, k=15)
+		# select = SelectKBest(chi2, k=15)
 		
 		params = {'C': 0.1, 'penalty': 'l1',
 		          'class_weight': 'auto'}
 
 		clf = LogisticRegression(**params)
 
-		pipeline = Pipeline([('ft', ft), ('select', select),
+		pipeline = Pipeline([('ft', ft),
 			                 ('scaler', scaler),('clf', clf)])
 
 		return pipeline
