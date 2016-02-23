@@ -40,9 +40,9 @@ class Models():
 
 		ft = FeatureTransformer()
 		scaler = StandardScaler()
-		select = SelectKBest(chi2, k=7)
+		select = SelectKBest(chi2, k=6)
 		
-		params = {'C': 0.1, 'penalty': 'l1',
+		params = {'C': 0.08, 'penalty': 'l1',
 		          'class_weight': 'auto'}
 
 		clf = LogisticRegression(**params)
@@ -92,14 +92,13 @@ class Models():
 
 		ft = FeatureTransformer()
 		scaler = StandardScaler()
-		select = SelectKBest(chi2, k=50)
+		select = SelectKBest(chi2, k=7)
 
-		params = {'n_estimators': 50, 'learning_rate': 0.1,
-		          'subsample': 0.66, 'colsample_bytree': 0.6,
-		          'min_child_weight': 20}
+		params = {'n_estimators': 750, 'learning_rate': 0.03}
 
 		clf = XGBClassifier(**params)
-		pipeline = Pipeline([('scaler', scaler), ('clf', clf)])
+		pipeline = Pipeline([('ft', ft), ('select', select),
+			                ('scaler', scaler), ('clf', clf)])
 
 		return pipeline
 
