@@ -42,7 +42,7 @@ class Models():
 		scaler = StandardScaler()
 		select = SelectKBest(chi2, k=6)
 		
-		params = {'C': 0.08, 'penalty': 'l1',
+		params = {'C': 0.1, 'penalty': 'l2',
 		          'class_weight': 'auto'}
 
 		clf = LogisticRegression(**params)
