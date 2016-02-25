@@ -29,8 +29,7 @@ class FeatureTransformer(BaseEstimator):
 		self.numerical_features = X.select_dtypes(exclude=['object']).columns
 		
 		addition_interaction_features = self.get_addition_interaction_features(X)
-		multiplication_interaction_features = self.get_multiply_interaction_features(X)
-		division_interaction_features = self.get_division_interaction_features(X)
+		# division_interaction_features = self.get_division_interaction_features(X)
 
 		self.quantile_f4 = X['f4'].quantile(q=0.2)
 		indicator_feature = X.apply(self.indicator_for_class_label, axis=1).reshape(-1, 1)
@@ -42,8 +41,7 @@ class FeatureTransformer(BaseEstimator):
 		features.append(X[self.numerical_features])
 		
 		features.append(addition_interaction_features)
-		features.append(multiplication_interaction_features)
-		features.append(division_interaction_features)
+		# features.append(division_interaction_features)
 		
 		features.append(indicator_feature)		
 
@@ -90,8 +88,7 @@ class FeatureTransformer(BaseEstimator):
 		cluster_labels = self.kmeans.predict(X).reshape(-1, 1)
 		
 		addition_interaction_features = self.get_addition_interaction_features(X)
-		multiplication_interaction_features = self.get_multiply_interaction_features(X)
-		division_interaction_features = self.get_division_interaction_features(X)
+		# division_interaction_features = self.get_division_interaction_features(X)
 
 		self.quantile_f4 = X['f4'].quantile(q=0.2)
 		indicator_feature = X.apply(self.indicator_for_class_label, axis=1).reshape(-1, 1)
@@ -100,8 +97,7 @@ class FeatureTransformer(BaseEstimator):
 		features.append(X[self.numerical_features])
 		
 		features.append(addition_interaction_features)
-		features.append(multiplication_interaction_features)
-		features.append(division_interaction_features)
+		# features.append(division_interaction_features)
 		
 		features.append(indicator_feature)		
 		

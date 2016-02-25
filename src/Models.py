@@ -92,9 +92,9 @@ class Models():
 
 		ft = FeatureTransformer()
 		scaler = StandardScaler()
-		select = SelectKBest(chi2, k=7)
+		select = SelectKBest(chi2, k=5)
 
-		params = {'n_estimators': 750, 'learning_rate': 0.03}
+		params = {'n_estimators': 20, 'learning_rate': 0.25, 'min_child_weight': 10}
 
 		clf = XGBClassifier(**params)
 		pipeline = Pipeline([('ft', ft), ('select', select),

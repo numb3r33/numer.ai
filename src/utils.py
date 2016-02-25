@@ -1,8 +1,10 @@
 import numpy as np
 
-from sklearn.cross_validation import ShuffleSplit
+from sklearn.cross_validation import ShuffleSplit, StratifiedKFold
 from sklearn.calibration import CalibratedClassifierCV
 from sklearn.metrics import roc_auc_score
+
+from sklearn.linear_model import LogisticRegression
 
 
 submission_dir = '../submissions/'
@@ -57,3 +59,52 @@ def report(grid_scores, n_top=3):
               np.std(score.cv_validation_scores)))
         print("Parameters: {0}".format(score.parameters))
         print("")
+
+
+def transform_for_ranked(preds, index):
+	ranks = []
+
+	for i, pred in enumerate(preds):
+		ranks.append((index[i], pred))
+
+	return ranks
+
+def stacked_blending(clfs, train, y, test):
+	X = train
+	y = y
+	X_submission = test
+
+	skf = list(StratifiedKFold(y, 3))
+
+	print 'Creating train and test sets for blending.'
+
+	dataset_blend_train = np.zeros((X.shape[0], len(clfs)))
+	dataset_blend_test = np.zeros((X_submission.shape[0], len(clfs)))
+
+	for j, clf in enumerate(clfs):
+		print j, clf
+		dataset_blend_test_j = np.zeros((X_submission.shape[0], len(skf)))
+		for i, (train, test) in enumerate(skf):
+			print "Fold", i
+			
+			X_train = X.iloc[train]
+			y_train = y.iloc[train]
+			X_test = X.iloc[test]
+			y_test = y.iloc[test]
+			clf.fit(X_train, y_train)
+			y_submission = clf.predict_proba(X_test)[:,1]
+			dataset_blend_train[test, j] = y_submission
+			dataset_blend_test_j[:, i] = clf.predict_proba(X_submission)[:,1]
+		dataset_blend_test[:,j] = dataset_blend_test_j.mean(1)
+
+	print
+	print "Blending."
+	clf = LogisticRegression(class_weight='auto')
+	clf.fit(dataset_blend_train, y)
+	y_submission = clf.predict_proba(dataset_blend_test)[:,1]
+
+	# print "Linear stretch of predictions to [0,1]"
+	# y_submission = (y_submission - y_submission.min()) / (y_submission.max() - y_submission.min())
+
+	return y_submission
+
