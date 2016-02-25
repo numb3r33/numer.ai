@@ -40,9 +40,9 @@ class Models():
 
 		ft = FeatureTransformer()
 		scaler = StandardScaler()
-		select = SelectKBest(chi2, k=6)
+		select = SelectKBest(chi2, k=5)
 		
-		params = {'C': 0.1, 'penalty': 'l2',
+		params = {'C': 3.0, 'penalty': 'l2',
 		          'class_weight': 'auto'}
 
 		clf = LogisticRegression(**params)
